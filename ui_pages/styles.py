@@ -272,6 +272,67 @@ html, body, .stApp {{
   .main .block-container {{ max-width: 1620px !important; }}
 }}
 
+/* ── RESPONSIVE — tablet (≤ 1024px) ──────────────────────────────────────── */
+@media (max-width: 1024px) {{
+  .main .block-container {{
+    padding: 16px 16px 40px 16px !important;
+  }}
+  /* Tables / wide content: allow horizontal scroll instead of clipping */
+  .dt, [data-testid="stDataFrame"], [data-testid="stTable"] {{
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }}
+  /* KPI strip wraps */
+  [data-testid="stHorizontalBlock"] {{
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }}
+  [data-testid="stHorizontalBlock"] > div {{
+    min-width: 200px !important;
+  }}
+}}
+
+/* ── RESPONSIVE — mobile (≤ 640px) ───────────────────────────────────────── */
+@media (max-width: 640px) {{
+  .main .block-container {{
+    padding: 12px 10px 32px 10px !important;
+  }}
+  /* Sidebar collapse control float higher / more reachable */
+  [data-testid="stSidebarCollapsedControl"] {{
+    top: 8px !important;
+    left: 8px !important;
+  }}
+  /* Sidebar takes full width when expanded on mobile drawer */
+  [data-testid="stSidebar"] {{
+    min-width: 80vw !important;
+    width: 80vw !important;
+  }}
+  /* Sidebar fixed footer: match drawer width, don't lock to 240px */
+  [data-testid="stSidebar"] > div:last-child > div[style*="position:fixed"],
+  [data-testid="stSidebarContent"] div[style*="position:fixed"] {{
+    width: 80vw !important;
+  }}
+  /* KPI tiles: full-width single column */
+  [data-testid="stHorizontalBlock"] > div {{
+    min-width: 100% !important;
+    flex: 1 1 100% !important;
+  }}
+  /* Big numerics shrink one notch */
+  .kpi-value {{ font-size: 22px !important; }}
+  /* Page title scale-down */
+  h1, .page-title {{ font-size: 20px !important; }}
+  /* Hide non-critical kbd shortcuts on mobile */
+  .kbd, [data-kbd] {{ display: none !important; }}
+  /* Allow long tables to scroll horizontally */
+  .dt-head, .dt-row {{
+    min-width: 560px;
+  }}
+  .dt {{
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }}
+}}
+
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {{
   background: {C["sidebar"]} !important;

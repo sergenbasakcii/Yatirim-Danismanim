@@ -226,7 +226,8 @@ with st.sidebar:
     now_str = _now.strftime("%H:%M")
     st.markdown(
         f"""
-<div style="position:fixed;bottom:0;left:0;width:240px;
+<div class="sb-footer" style="position:fixed;bottom:0;left:0;width:240px;
+            max-width:100%;
             background:{C['sidebar']};
             border-top:1px solid {C['border_solid']};
             padding:12px 20px 14px;">
