@@ -224,7 +224,16 @@ html, body, .stApp {{
 /* ── Hide Streamlit chrome (but KEEP sidebar collapse controls) ────────── */
 #MainMenu, footer,
 [data-testid="stDecoration"],
-.stDeployButton                 {{ display: none !important; }}
+[data-testid="stToolbar"],
+[data-testid="stMainMenu"],
+[data-testid="stActionButtonIcon"],
+[data-testid="stStatusWidget"],
+[data-testid="stToolbarActions"],
+.stDeployButton,
+.stAppDeployButton,
+button[kind="header"],
+header [data-testid="baseButton-headerNoPadding"],
+header [data-testid="baseButton-header"]      {{ display: none !important; }}
 
 /* Header bar made transparent rather than removed so the sidebar
    collapse / expand button still receives clicks. */
@@ -237,29 +246,52 @@ html, body, .stApp {{
 }}
 [data-testid="stHeader"] > * {{ pointer-events: auto; }}
 
-/* The collapsed-sidebar "expand" chevron — make sure it is visible
-   above the page content. */
+/* The collapsed-sidebar "expand" chevron — premium pill button.
+   Bigger hit area + label so it's discoverable, not a lost arrow. */
 [data-testid="stSidebarCollapsedControl"],
 [data-testid="collapsedControl"] {{
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
   z-index: 1000 !important;
-  top: 12px !important;
-  left: 12px !important;
+  top: 16px !important;
+  left: 16px !important;
 }}
 [data-testid="stSidebarCollapsedControl"] button,
 [data-testid="collapsedControl"] button {{
-  background: {C["bg_elev"]} !important;
-  border: 1px solid {C["border_solid"]} !important;
-  border-radius: 8px !important;
+  background: linear-gradient(180deg,
+              {C["bg_elev"]} 0%,
+              rgba(15,19,26,0.96) 100%) !important;
+  border: 1px solid {C["border_strong"]} !important;
+  border-radius: 10px !important;
   color: {C["t1"]} !important;
-  box-shadow: 0 2px 8px -2px rgba(0,0,0,0.40) !important;
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset,
+              0 6px 18px -6px rgba(0,0,0,0.55) !important;
+  transition: background 160ms var(--ease, ease),
+              border-color 160ms var(--ease, ease),
+              transform 120ms var(--ease, ease) !important;
 }}
 [data-testid="stSidebarCollapsedControl"] button:hover,
 [data-testid="collapsedControl"] button:hover {{
-  background: {C["surface"]} !important;
+  background: linear-gradient(180deg,
+              {C["surface"]} 0%,
+              {C["bg_elev"]} 100%) !important;
   border-color: {C["accent"]} !important;
+  color: {C["accent_hover"]} !important;
+  transform: translateY(-1px) !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button svg,
+[data-testid="collapsedControl"] button svg {{
+  width: 18px !important;
+  height: 18px !important;
+  color: inherit !important;
+  fill: currentColor !important;
 }}
 
 /* ── Content area ────────────────────────────────────────────────────────── */
