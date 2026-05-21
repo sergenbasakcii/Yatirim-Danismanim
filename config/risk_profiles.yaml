@@ -1,0 +1,169 @@
+
+# HedgeFund AI — Risk Profili Tanımları
+# Her profil; maksimum volatilite, varlık sınıfı limitleri ve toleranslarını içerir.
+
+profiles:
+
+  cok_dengeli:
+    id: cok_dengeli
+    name: "Çok Dengeli"
+    emoji: "🛡️"
+    description: "Sermaye koruma öncelikli. Minimum risk, düşük getiri beklentisi."
+    risk_score_threshold: 25          # bu risk puanının üzerindeki varlıkları önerme
+    target_annual_return_pct: 10
+    max_loss_tolerance_pct: -5
+    volatility_max_pct: 10
+    drawdown_tolerance_pct: -8
+    allocation:
+      nakit: 25
+      tahvil_altin: 35
+      etf_savunmaci: 25
+      hisse_dusuk_risk: 10
+      hisse_buyume: 5
+      kripto: 0
+    max_single_position_pct: 15
+    horizon: uzun
+    suitable_for: "Emekliler, risk sevmeyen tasarruf sahipleri, sermaye korumacılar"
+    rebalance_frequency: "3ay"
+
+  dengeli:
+    id: dengeli
+    name: "Dengeli"
+    emoji: "⚖️"
+    description: "Risk-getiri dengesi. Orta volatilite, makul büyüme beklentisi."
+    risk_score_threshold: 40
+    target_annual_return_pct: 18
+    max_loss_tolerance_pct: -12
+    volatility_max_pct: 18
+    drawdown_tolerance_pct: -15
+    allocation:
+      nakit: 15
+      tahvil_altin: 20
+      etf_savunmaci: 20
+      hisse_dusuk_risk: 20
+      hisse_buyume: 20
+      kripto: 5
+    max_single_position_pct: 20
+    horizon: orta
+    suitable_for: "Orta vadeli yatırımcılar, düzenli gelir sahipleri"
+    rebalance_frequency: "2ay"
+
+  dengeli_agresif:
+    id: dengeli_agresif
+    name: "Dengeli-Agresif"
+    emoji: "📊"
+    description: "Büyüme ağırlıklı ama kontrollü risk. Orta-uzun vadeli odak."
+    risk_score_threshold: 52
+    target_annual_return_pct: 28
+    max_loss_tolerance_pct: -20
+    volatility_max_pct: 25
+    drawdown_tolerance_pct: -22
+    allocation:
+      nakit: 10
+      tahvil_altin: 10
+      etf_savunmaci: 10
+      hisse_dusuk_risk: 20
+      hisse_buyume: 35
+      kripto: 15
+    max_single_position_pct: 25
+    horizon: orta
+    suitable_for: "Büyüme arayan orta seviye yatırımcılar"
+    rebalance_frequency: "6hafta"
+
+  orta_riskli:
+    id: orta_riskli
+    name: "Orta Riskli"
+    emoji: "📈"
+    description: "Yüksek büyüme potansiyeli, belirgin risk. Aktif takip gerektirir."
+    risk_score_threshold: 62
+    target_annual_return_pct: 40
+    max_loss_tolerance_pct: -28
+    volatility_max_pct: 35
+    drawdown_tolerance_pct: -30
+    allocation:
+      nakit: 8
+      tahvil_altin: 5
+      etf_savunmaci: 5
+      hisse_dusuk_risk: 15
+      hisse_buyume: 42
+      kripto: 25
+    max_single_position_pct: 30
+    horizon: orta
+    suitable_for: "Aktif yatırımcılar, teknik analiz bilenler"
+    rebalance_frequency: "1ay"
+
+  riskli:
+    id: riskli
+    name: "Riskli"
+    emoji: "🎯"
+    description: "Yüksek getiri hedefli, yüksek volatilite. Fırsat odaklı portföy."
+    risk_score_threshold: 72
+    target_annual_return_pct: 65
+    max_loss_tolerance_pct: -40
+    volatility_max_pct: 50
+    drawdown_tolerance_pct: -42
+    allocation:
+      nakit: 5
+      tahvil_altin: 0
+      etf_savunmaci: 0
+      hisse_dusuk_risk: 10
+      hisse_buyume: 40
+      kripto: 45
+    max_single_position_pct: 35
+    horizon: kisa_orta
+    suitable_for: "Deneyimli yatırımcılar, yüksek getiri arayan aktif takipçiler"
+    rebalance_frequency: "2hafta"
+
+  cok_riskli:
+    id: cok_riskli
+    name: "Çok Riskli"
+    emoji: "🔥"
+    description: "Spekülatif ağırlıklı. Büyük kayıp riski, büyük kazanç potansiyeli."
+    risk_score_threshold: 82
+    target_annual_return_pct: 100
+    max_loss_tolerance_pct: -55
+    volatility_max_pct: 75
+    drawdown_tolerance_pct: -60
+    allocation:
+      nakit: 5
+      tahvil_altin: 0
+      etf_savunmaci: 0
+      hisse_dusuk_risk: 5
+      hisse_buyume: 30
+      kripto: 60
+    max_single_position_pct: 40
+    horizon: kisa
+    suitable_for: "Deneyimli kripto/hisse spekülatörleri, yüksek risk toleransı olanlar"
+    rebalance_frequency: "haftalik"
+
+  ultra_agresif:
+    id: ultra_agresif
+    name: "Ultra Agresif"
+    emoji: "💀"
+    description: "Maksimum getiri hedefli, maksimum risk. Sadece deneyimli yatırımcılar için."
+    risk_score_threshold: 100
+    target_annual_return_pct: 200
+    max_loss_tolerance_pct: -80
+    volatility_max_pct: 150
+    drawdown_tolerance_pct: -80
+    allocation:
+      nakit: 0
+      tahvil_altin: 0
+      etf_savunmaci: 0
+      hisse_dusuk_risk: 0
+      hisse_buyume: 20
+      kripto: 80
+    max_single_position_pct: 50
+    horizon: kisa
+    suitable_for: "Yalnızca kaybetmeyi göze alabilecek deneyimli yatırımcılar"
+    rebalance_frequency: "haftalik"
+
+# Risk seviyesi → uygun profiller eşleşmesi
+risk_level_mapping:
+  cok_dusuk:    [cok_dengeli, dengeli]
+  dusuk:        [cok_dengeli, dengeli, dengeli_agresif]
+  orta:         [dengeli, dengeli_agresif, orta_riskli]
+  orta_yuksek:  [dengeli_agresif, orta_riskli, riskli]
+  yuksek:       [orta_riskli, riskli, cok_riskli]
+  cok_yuksek:   [riskli, cok_riskli, ultra_agresif]
+  spekulatif:   [cok_riskli, ultra_agresif]

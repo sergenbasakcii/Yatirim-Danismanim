@@ -1,0 +1,385 @@
+
+# HedgeFund AI — Varlık Evreni
+# Tüm izlenen varlıklar: kripto, ABD hisseleri, BIST, ETF, fon
+
+crypto:
+  - symbol: BTC-USD
+    name: "Bitcoin"
+    sector: "Layer 1"
+    risk_level: yuksek
+    market_cap_tier: mega
+  - symbol: ETH-USD
+    name: "Ethereum"
+    sector: "Smart Contract"
+    risk_level: yuksek
+    market_cap_tier: mega
+  - symbol: BNB-USD
+    name: "BNB"
+    sector: "Exchange Token"
+    risk_level: yuksek
+    market_cap_tier: large
+  - symbol: SOL-USD
+    name: "Solana"
+    sector: "Layer 1"
+    risk_level: cok_yuksek
+    market_cap_tier: large
+  - symbol: ADA-USD
+    name: "Cardano"
+    sector: "Layer 1"
+    risk_level: cok_yuksek
+    market_cap_tier: large
+  - symbol: AVAX-USD
+    name: "Avalanche"
+    sector: "Layer 1"
+    risk_level: cok_yuksek
+    market_cap_tier: mid
+  - symbol: DOT-USD
+    name: "Polkadot"
+    sector: "Interoperability"
+    risk_level: cok_yuksek
+    market_cap_tier: mid
+  - symbol: LINK-USD
+    name: "Chainlink"
+    sector: "Oracle"
+    risk_level: cok_yuksek
+    market_cap_tier: mid
+  - symbol: MATIC-USD
+    name: "Polygon"
+    sector: "Layer 2"
+    risk_level: cok_yuksek
+    market_cap_tier: mid
+  - symbol: ATOM-USD
+    name: "Cosmos"
+    sector: "Interoperability"
+    risk_level: cok_yuksek
+    market_cap_tier: mid
+  - symbol: XRP-USD
+    name: "XRP"
+    sector: "Payment"
+    risk_level: yuksek
+    market_cap_tier: large
+  - symbol: LTC-USD
+    name: "Litecoin"
+    sector: "Payment"
+    risk_level: yuksek
+    market_cap_tier: mid
+  - symbol: UNI7083-USD
+    name: "Uniswap"
+    sector: "DeFi"
+    risk_level: spekulatif
+    market_cap_tier: mid
+  - symbol: NEAR-USD
+    name: "NEAR Protocol"
+    sector: "Layer 1"
+    risk_level: spekulatif
+    market_cap_tier: mid
+  - symbol: ARB11841-USD
+    name: "Arbitrum"
+    sector: "Layer 2"
+    risk_level: spekulatif
+    market_cap_tier: mid
+
+us_stocks:
+  # Mega Cap Teknoloji
+  - symbol: AAPL
+    name: "Apple Inc."
+    sector: "Teknoloji"
+    risk_level: dusuk
+    market_cap_tier: mega
+  - symbol: MSFT
+    name: "Microsoft Corp."
+    sector: "Teknoloji"
+    risk_level: dusuk
+    market_cap_tier: mega
+  - symbol: NVDA
+    name: "NVIDIA Corp."
+    sector: "Yarı İletken"
+    risk_level: orta
+    market_cap_tier: mega
+  - symbol: GOOGL
+    name: "Alphabet Inc."
+    sector: "Teknoloji"
+    risk_level: dusuk
+    market_cap_tier: mega
+  - symbol: AMZN
+    name: "Amazon.com Inc."
+    sector: "E-Ticaret/Bulut"
+    risk_level: orta
+    market_cap_tier: mega
+  - symbol: META
+    name: "Meta Platforms"
+    sector: "Sosyal Medya"
+    risk_level: orta
+    market_cap_tier: mega
+  - symbol: TSLA
+    name: "Tesla Inc."
+    sector: "Elektrikli Araç"
+    risk_level: yuksek
+    market_cap_tier: mega
+  - symbol: AVGO
+    name: "Broadcom Inc."
+    sector: "Yarı İletken"
+    risk_level: orta
+    market_cap_tier: large
+  - symbol: ORCL
+    name: "Oracle Corp."
+    sector: "Yazılım"
+    risk_level: dusuk
+    market_cap_tier: large
+  - symbol: AMD
+    name: "Advanced Micro Devices"
+    sector: "Yarı İletken"
+    risk_level: orta_yuksek
+    market_cap_tier: large
+  # Finans
+  - symbol: JPM
+    name: "JPMorgan Chase"
+    sector: "Finans"
+    risk_level: dusuk
+    market_cap_tier: mega
+  - symbol: V
+    name: "Visa Inc."
+    sector: "Finans"
+    risk_level: cok_dusuk
+    market_cap_tier: mega
+  - symbol: MA
+    name: "Mastercard Inc."
+    sector: "Finans"
+    risk_level: cok_dusuk
+    market_cap_tier: mega
+  - symbol: BAC
+    name: "Bank of America"
+    sector: "Finans"
+    risk_level: dusuk
+    market_cap_tier: mega
+  - symbol: GS
+    name: "Goldman Sachs"
+    sector: "Yatırım Bankacılığı"
+    risk_level: orta
+    market_cap_tier: large
+  # Sağlık
+  - symbol: JNJ
+    name: "Johnson & Johnson"
+    sector: "Sağlık"
+    risk_level: cok_dusuk
+    market_cap_tier: mega
+  - symbol: UNH
+    name: "UnitedHealth Group"
+    sector: "Sağlık Sigortası"
+    risk_level: dusuk
+    market_cap_tier: mega
+  - symbol: LLY
+    name: "Eli Lilly"
+    sector: "İlaç"
+    risk_level: orta
+    market_cap_tier: mega
+  - symbol: ABBV
+    name: "AbbVie Inc."
+    sector: "Biyofarma"
+    risk_level: orta
+    market_cap_tier: large
+  # Enerji
+  - symbol: XOM
+    name: "Exxon Mobil"
+    sector: "Enerji"
+    risk_level: orta
+    market_cap_tier: mega
+  - symbol: CVX
+    name: "Chevron Corp."
+    sector: "Enerji"
+    risk_level: orta
+    market_cap_tier: mega
+  # Tüketim
+  - symbol: WMT
+    name: "Walmart Inc."
+    sector: "Perakende"
+    risk_level: cok_dusuk
+    market_cap_tier: mega
+  - symbol: COST
+    name: "Costco Wholesale"
+    sector: "Perakende"
+    risk_level: dusuk
+    market_cap_tier: mega
+  # Büyüme / Momentum
+  - symbol: PLTR
+    name: "Palantir Technologies"
+    sector: "Veri/AI"
+    risk_level: yuksek
+    market_cap_tier: large
+  - symbol: CRWD
+    name: "CrowdStrike Holdings"
+    sector: "Siber Güvenlik"
+    risk_level: orta_yuksek
+    market_cap_tier: large
+  - symbol: SHOP
+    name: "Shopify Inc."
+    sector: "E-Ticaret"
+    risk_level: yuksek
+    market_cap_tier: large
+  - symbol: COIN
+    name: "Coinbase Global"
+    sector: "Kripto Altyapı"
+    risk_level: cok_yuksek
+    market_cap_tier: large
+  - symbol: MSTR
+    name: "MicroStrategy"
+    sector: "Bitcoin Proxy"
+    risk_level: spekulatif
+    market_cap_tier: mid
+
+bist:
+  - symbol: THYAO.IS
+    name: "Türk Hava Yolları"
+    sector: "Havacılık"
+    risk_level: orta_yuksek
+  - symbol: ASELS.IS
+    name: "Aselsan"
+    sector: "Savunma"
+    risk_level: orta
+  - symbol: EREGL.IS
+    name: "Ereğli Demir Çelik"
+    sector: "Demir Çelik"
+    risk_level: orta
+  - symbol: GARAN.IS
+    name: "Garanti BBVA"
+    sector: "Bankacılık"
+    risk_level: orta_yuksek
+  - symbol: AKBNK.IS
+    name: "Akbank"
+    sector: "Bankacılık"
+    risk_level: orta_yuksek
+  - symbol: SISE.IS
+    name: "Şişe Cam"
+    sector: "Cam"
+    risk_level: orta
+  - symbol: KCHOL.IS
+    name: "Koç Holding"
+    sector: "Holding"
+    risk_level: dusuk
+  - symbol: SAHOL.IS
+    name: "Sabancı Holding"
+    sector: "Holding"
+    risk_level: dusuk
+  - symbol: BIMAS.IS
+    name: "BİM Mağazalar"
+    sector: "Perakende"
+    risk_level: dusuk
+  - symbol: TCELL.IS
+    name: "Turkcell"
+    sector: "Telekomünikasyon"
+    risk_level: orta
+  - symbol: TUPRS.IS
+    name: "Tüpraş"
+    sector: "Rafineri"
+    risk_level: orta
+  - symbol: FROTO.IS
+    name: "Ford Otosan"
+    sector: "Otomotiv"
+    risk_level: orta
+  - symbol: TOASO.IS
+    name: "Tofaş Oto"
+    sector: "Otomotiv"
+    risk_level: orta
+  - symbol: PGSUS.IS
+    name: "Pegasus Hava"
+    sector: "Havacılık"
+    risk_level: orta_yuksek
+  - symbol: YKBNK.IS
+    name: "Yapı Kredi Bankası"
+    sector: "Bankacılık"
+    risk_level: orta_yuksek
+  - symbol: VESTL.IS
+    name: "Vestel"
+    sector: "Elektronik"
+    risk_level: yuksek
+  - symbol: KOZAL.IS
+    name: "Koza Altın"
+    sector: "Altın Madenci"
+    risk_level: orta_yuksek
+  - symbol: EKGYO.IS
+    name: "Emlak Konut GYO"
+    sector: "Gayrimenkul"
+    risk_level: orta
+
+# Öncelikli ETF sepeti (fırsat tarama için)
+priority_etfs:
+  - symbol: SPY
+    name: "SPDR S&P 500 ETF"
+    category: "ABD Geniş Piyasa"
+    risk_level: dusuk
+  - symbol: QQQ
+    name: "Invesco Nasdaq-100"
+    category: "Teknoloji"
+    risk_level: orta
+  - symbol: SOXX
+    name: "iShares Semiconductor"
+    category: "Yarı İletken"
+    risk_level: orta_yuksek
+  - symbol: XLK
+    name: "Technology Select SPDR"
+    category: "Teknoloji"
+    risk_level: orta
+  - symbol: ARKK
+    name: "ARK Innovation ETF"
+    category: "İnovasyon"
+    risk_level: yuksek
+  - symbol: GLD
+    name: "SPDR Gold Shares"
+    category: "Altın"
+    risk_level: orta
+  - symbol: TLT
+    name: "iShares 20Y+ Treasury"
+    category: "Tahvil"
+    risk_level: dusuk
+  - symbol: XLE
+    name: "Energy Select SPDR"
+    category: "Enerji"
+    risk_level: orta
+  - symbol: IBB
+    name: "iShares Biotechnology"
+    category: "Biyoteknoloji"
+    risk_level: yuksek
+  - symbol: IBIT
+    name: "iShares Bitcoin Trust"
+    category: "Kripto ETF"
+    risk_level: cok_yuksek
+  - symbol: EEM
+    name: "iShares MSCI Emerging Markets"
+    category: "Gelişmekte Olan"
+    risk_level: orta_yuksek
+  - symbol: TQQQ
+    name: "ProShares UltraPro QQQ 3x"
+    category: "Kaldıraçlı"
+    risk_level: spekulatif
+  - symbol: VNQ
+    name: "Vanguard Real Estate"
+    category: "Gayrimenkul"
+    risk_level: orta
+  - symbol: HYG
+    name: "iShares High Yield Bond"
+    category: "Yüksek Getiri Tahvil"
+    risk_level: orta
+  - symbol: SOXL
+    name: "Direxion Semi Bull 3x"
+    category: "Kaldıraçlı"
+    risk_level: spekulatif
+  - symbol: IWM
+    name: "iShares Russell 2000"
+    category: "Küçük Ölçekli"
+    risk_level: orta_yuksek
+  - symbol: XBI
+    name: "SPDR S&P Biotech"
+    category: "Biyoteknoloji"
+    risk_level: yuksek
+  - symbol: ICLN
+    name: "iShares Clean Energy"
+    category: "Temiz Enerji"
+    risk_level: orta_yuksek
+  - symbol: TAN
+    name: "Invesco Solar ETF"
+    category: "Güneş Enerjisi"
+    risk_level: yuksek
+  - symbol: LIT
+    name: "Global X Lithium"
+    category: "Lityum/EV"
+    risk_level: yuksek

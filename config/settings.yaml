@@ -1,0 +1,127 @@
+# ============================================================
+# HedgeFund AI - Configuration
+# ============================================================
+
+# ── API Keys ───────────────────────────────────────────────
+# DO NOT put real secrets here. Inject via environment variables
+# or `.streamlit/secrets.toml` (see .streamlit/secrets.toml.example).
+# Env var names: HFAI_API_KEYS_<KEY_UPPER>, e.g. HFAI_API_KEYS_BINANCE_API_KEY
+api_keys:
+  binance_api_key: ""
+  binance_secret:  ""
+  finnhub:         ""
+  newsapi:         ""
+  fred:            ""
+  glassnode:       ""     # optional, mock data used if empty
+
+# ── Watchlists ──────────────────────────────────────────────
+watchlist:
+  crypto:
+    - BTC/USDT
+    - ETH/USDT
+    - SOL/USDT
+    - BNB/USDT
+    - AVAX/USDT
+
+  us_stocks:
+    - AAPL
+    - NVDA
+    - MSFT
+    - TSLA
+    - AMZN
+
+  bist:
+    - THYAO.IS
+    - ASELS.IS
+    - EREGL.IS
+    - GARAN.IS
+    - KCHOL.IS
+
+  macro:
+    - "^VIX"       # CBOE Volatility Index
+    - "DX-Y.NYB"   # DXY Dollar Index
+    - "GC=F"       # Gold Futures
+    - "^TNX"       # 10Y Treasury Yield
+
+# ── Technical Analysis Parameters ──────────────────────────
+technical:
+  rsi_period: 14
+  rsi_oversold: 30
+  rsi_overbought: 70
+  ema_periods: [20, 50, 200]
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  bb_period: 20
+  bb_std: 2
+  volume_spike_multiplier: 2.5   # x times avg volume = spike
+
+# ── Decision Engine Weights ─────────────────────────────────
+decision_weights:
+  technical:   0.40
+  fundamental: 0.25
+  sentiment:   0.20
+  macro:       0.10
+  onchain:     0.05             # only for crypto
+
+# ── Risk Management ─────────────────────────────────────────
+risk:
+  max_portfolio_risk_pct: 2.0   # max % of portfolio per trade
+  max_single_position_pct: 10.0 # max % allocation to one asset
+  default_stop_loss_pct: 5.0
+  take_profit_levels: [8.0, 15.0, 25.0]  # % gains for partial exits
+  max_drawdown_threshold: 15.0  # alert if drawdown exceeds this %
+  correlation_warning: 0.85     # alert if two assets correlate above this
+
+# ── Data Collection ─────────────────────────────────────────
+data:
+  crypto_timeframe: "1d"
+  stock_period: "6mo"
+  stock_interval: "1d"
+  cache_ttl_minutes: 30
+  max_retries: 3
+  retry_delay_seconds: 5
+
+# ── Alert System ────────────────────────────────────────────
+alerts:
+  enable_console: true
+  enable_log_file: true
+  log_path: "logs/alerts.log"
+  # smtp settings (optional for email alerts)
+  smtp_host: ""
+  smtp_port: 587
+  smtp_user: ""
+  smtp_pass: ""
+  alert_email: ""
+
+# ── Backtest ────────────────────────────────────────────────
+backtest:
+  default_start: "2023-01-01"
+  default_end:   "2024-12-31"
+  initial_capital: 100000
+  commission_pct: 0.1
+
+# ── Telegram Bot ─────────────────────────────────────────────
+# Inject token/chat_id via HFAI_TELEGRAM_BOT_TOKEN / HFAI_TELEGRAM_CHAT_ID
+# or `.streamlit/secrets.toml` ([telegram] block).
+telegram:
+  bot_token:      ""
+  chat_id:        ""
+  send_on_buy:    true
+  send_on_sell:   true
+  send_on_hold:   false
+  min_confidence: 60                  # bu güven altındaki sinyaller gönderilmez
+
+# ── Zamanlayıcı ───────────────────────────────────────────────
+scheduler:
+  enabled:          true
+  timezone:         "Europe/Istanbul"
+  morning_briefing: "08:30"
+  market_open_scan: "09:30"
+  midday_scan:      "12:00"
+  preclose_alert:   "16:30"
+  evening_summary:  "18:00"
+
+# ── Fiyat Alarmları (manuel) ──────────────────────────────────
+# Telegram'dan da eklenebilir: /alert BTC/USDT 80000 above
+price_alerts: []

@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────────
+# Yatırım Danışmanım — Python dependencies
+# ─────────────────────────────────────────────────────────────────
+# Cloud (Streamlit Community Cloud / Hugging Face Spaces) için:
+#   pip install -r requirements.txt
+# Bu liste hem local hem cloud için çalışır.
+# ─────────────────────────────────────────────────────────────────
+
+# ── Web UI (Streamlit Cloud için ŞART) ───────────────────────────
+streamlit>=1.32.0
+plotly>=5.18.0
+
+# ── Core data ────────────────────────────────────────────────────
+pandas>=2.1.0
+numpy>=1.26.0
+yfinance>=0.2.36
+requests>=2.31.0
+PyYAML>=6.0.1
+
+# ── Crypto exchange ──────────────────────────────────────────────
+ccxt>=4.2.0
+
+# ── Technical analysis ───────────────────────────────────────────
+ta>=0.11.0
+
+# ── Charts (Plotly dışı fallback için) ───────────────────────────
+matplotlib>=3.8.0
+
+# ── Telegram bot (opsiyonel runtime) ─────────────────────────────
+python-telegram-bot>=20.0
+
+# ── Scheduler ────────────────────────────────────────────────────
+apscheduler>=3.10.0
+
+# ── Terminal yardımcılar ─────────────────────────────────────────
+colorama>=0.4.6
+tabulate>=0.9.0
+
+# ─────────────────────────────────────────────────────────────────
+# Yalnızca masaüstü (CustomTkinter GUI) — cloud'da KURULMASIN
+# Bunlar bilerek yorumlandı. Local desktop için aşağıdakileri aç:
+# ─────────────────────────────────────────────────────────────────
+# customtkinter>=5.2.0
+# pyinstaller>=6.0.0

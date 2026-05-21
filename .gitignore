@@ -1,0 +1,51 @@
+# ─── Secrets / credentials ─────────────────────────────────────────────
+.streamlit/secrets.toml
+.env
+.env.*
+!.env.example
+config/secrets.yaml
+
+# ─── Local DB / cache / logs ───────────────────────────────────────────
+data/
+logs/
+*.db
+*.sqlite
+*.sqlite3
+.cache/
+
+# ─── Python ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─── Virtual envs ──────────────────────────────────────────────────────
+venv/
+env/
+.venv/
+ENV/
+
+# ─── IDE / OS ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── PyInstaller artifacts ─────────────────────────────────────────────
+*.spec
+build/
+dist/
+
+# ─── Local snapshots / Playwright ──────────────────────────────────────
+scripts/snapshots/
+.playwright-browsers/
