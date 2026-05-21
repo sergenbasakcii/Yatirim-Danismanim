@@ -245,77 +245,51 @@ html, body, .stApp {{
 [data-testid="stHeader"] > * {{ pointer-events: auto; }}
 
 /* ════════════════════════════════════════════════════════════════════════
-   SIDEBAR EXPAND BUTTON — BULLETPROOF
-   Multiple testid variants + ARIA fallbacks cover all Streamlit versions.
-   Forced position:fixed so it can never be hidden behind page content. */
+   SIDEBAR LOCKED OPEN — Modüller her zaman görünür
+   Desktop'ta sidebar asla kapanmaz: tüm collapse butonları gizli,
+   sidebar görünürlüğü zorlanır. Mobile'da (≤640px) drawer davranışı
+   responsive bölümünde ayrıca yönetilir.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* 1) Hide ALL sidebar collapse / expand buttons */
 [data-testid="stSidebarCollapsedControl"],
 [data-testid="collapsedControl"],
 [data-testid="stSidebarCollapseButton"],
 [data-testid="stExpandSidebarButton"],
-button[aria-label*="sidebar" i],
-button[aria-label*="kenar" i] {{
+[data-testid="stSidebar"] button[aria-label*="collapse" i],
+[data-testid="stSidebar"] button[aria-label*="close" i],
+[data-testid="stSidebar"] button[aria-label*="kapat" i],
+[data-testid="stSidebar"] button[kind="header"],
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] button {{
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}}
+
+/* 2) Force sidebar to be ALWAYS visible (even if state says collapsed) */
+[data-testid="stSidebar"],
+[data-testid="stSidebar"][aria-expanded="false"],
+[data-testid="stSidebar"][aria-expanded="true"] {{
   display: flex !important;
   visibility: visible !important;
+  transform: none !important;
+  margin-left: 0 !important;
+  width: 240px !important;
+  min-width: 240px !important;
+  max-width: 240px !important;
   opacity: 1 !important;
-  pointer-events: auto !important;
-  position: fixed !important;
-  top: 14px !important;
-  left: 14px !important;
-  z-index: 999999 !important;
-  width: auto !important;
-  height: auto !important;
 }}
 
-/* Style the button itself — premium pill */
-[data-testid="stSidebarCollapsedControl"] button,
-[data-testid="collapsedControl"] button,
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stExpandSidebarButton"] button,
-[data-testid="stSidebarCollapsedControl"][role="button"],
-[data-testid="collapsedControl"][role="button"],
-button[aria-label*="sidebar" i],
-button[aria-label*="kenar" i] {{
-  background: linear-gradient(180deg,
-              {C["bg_elev"]} 0%,
-              rgba(15,19,26,0.96) 100%) !important;
-  border: 1px solid {C["border_strong"]} !important;
-  border-radius: 10px !important;
-  color: {C["t1"]} !important;
-  width: 40px !important;
-  height: 40px !important;
-  min-width: 40px !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset,
-              0 6px 18px -6px rgba(0,0,0,0.55) !important;
-  transition: background 160ms ease,
-              border-color 160ms ease,
-              transform 120ms ease !important;
-}}
-
-[data-testid="stSidebarCollapsedControl"] button:hover,
-[data-testid="collapsedControl"] button:hover,
-[data-testid="stSidebarCollapseButton"] button:hover,
-button[aria-label*="sidebar" i]:hover {{
-  background: linear-gradient(180deg,
-              {C["surface"]} 0%,
-              {C["bg_elev"]} 100%) !important;
-  border-color: {C["accent"]} !important;
-  color: {C["accent_hover"]} !important;
-  transform: translateY(-1px) !important;
-}}
-
-[data-testid="stSidebarCollapsedControl"] svg,
-[data-testid="collapsedControl"] svg,
-[data-testid="stSidebarCollapseButton"] svg,
-button[aria-label*="sidebar" i] svg {{
-  width: 18px !important;
-  height: 18px !important;
-  color: inherit !important;
-  fill: currentColor !important;
+/* 3) Make sure sidebar content is visible (some Streamlit versions
+      hide the inner div when collapsed) */
+[data-testid="stSidebarContent"],
+[data-testid="stSidebarUserContent"] {{
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }}
 
 /* ── Content area ────────────────────────────────────────────────────────── */
@@ -358,15 +332,18 @@ button[aria-label*="sidebar" i] svg {{
     top: 8px !important;
     left: 8px !important;
   }}
-  /* Sidebar takes full width when expanded on mobile drawer */
-  [data-testid="stSidebar"] {{
-    min-width: 80vw !important;
-    width: 80vw !important;
+  /* Mobile: sidebar narrower so it doesn't eat the screen, but still visible */
+  [data-testid="stSidebar"],
+  [data-testid="stSidebar"][aria-expanded="false"],
+  [data-testid="stSidebar"][aria-expanded="true"] {{
+    min-width: 200px !important;
+    width: 200px !important;
+    max-width: 200px !important;
   }}
   /* Sidebar fixed footer: match drawer width, don't lock to 240px */
   [data-testid="stSidebar"] > div:last-child > div[style*="position:fixed"],
   [data-testid="stSidebarContent"] div[style*="position:fixed"] {{
-    width: 80vw !important;
+    width: 200px !important;
   }}
   /* KPI tiles: full-width single column */
   [data-testid="stHorizontalBlock"] > div {{
