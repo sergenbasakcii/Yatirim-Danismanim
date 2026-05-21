@@ -1,5 +1,5 @@
 """
-HedgeFund AI — Institutional Design System
+Yatırım Danışmanım — Institutional Design System
 ==========================================
 Production-grade design tokens, CSS reset, Plotly theme and shared
 primitives for an institutional investment-intelligence terminal.
@@ -221,19 +221,17 @@ html, body, .stApp {{
 
 ::selection {{ background: {C["accent_glow"]}; color: {C["t1"]}; }}
 
-/* ── Hide Streamlit chrome (but KEEP sidebar collapse controls) ────────── */
+/* ── Hide Streamlit chrome (but KEEP sidebar collapse controls) ──────────
+   IMPORTANT: NEVER use a blanket "header button" or "baseButton-header"
+   selector here — that hits the sidebar expand chevron and breaks UX. */
 #MainMenu, footer,
 [data-testid="stDecoration"],
 [data-testid="stToolbar"],
 [data-testid="stMainMenu"],
-[data-testid="stActionButtonIcon"],
 [data-testid="stStatusWidget"],
 [data-testid="stToolbarActions"],
 .stDeployButton,
-.stAppDeployButton,
-button[kind="header"],
-header [data-testid="baseButton-headerNoPadding"],
-header [data-testid="baseButton-header"]      {{ display: none !important; }}
+.stAppDeployButton                            {{ display: none !important; }}
 
 /* Header bar made transparent rather than removed so the sidebar
    collapse / expand button still receives clicks. */
@@ -1021,7 +1019,7 @@ def page_header(title: str, sub: str = ""):
     st.markdown(
         f'<div class="page-head fade-up">'
         f'  <div>'
-        f'    <div class="lbl" style="margin-bottom:4px;">HEDGEFUND AI</div>'
+        f'    <div class="lbl" style="margin-bottom:4px;">YATIRIM DANIŞMANIM</div>'
         f'    <div class="ph-title">{title}</div>'
         f'    {sub_html}'
         f'  </div>'
