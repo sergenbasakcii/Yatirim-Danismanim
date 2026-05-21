@@ -244,39 +244,62 @@ html, body, .stApp {{
 }}
 [data-testid="stHeader"] > * {{ pointer-events: auto; }}
 
-/* The collapsed-sidebar "expand" chevron — premium pill button.
-   Bigger hit area + label so it's discoverable, not a lost arrow. */
+/* ════════════════════════════════════════════════════════════════════════
+   SIDEBAR EXPAND BUTTON — BULLETPROOF
+   Multiple testid variants + ARIA fallbacks cover all Streamlit versions.
+   Forced position:fixed so it can never be hidden behind page content. */
 [data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"] {{
+[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stExpandSidebarButton"],
+button[aria-label*="sidebar" i],
+button[aria-label*="kenar" i] {{
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
-  z-index: 1000 !important;
-  top: 16px !important;
-  left: 16px !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+  top: 14px !important;
+  left: 14px !important;
+  z-index: 999999 !important;
+  width: auto !important;
+  height: auto !important;
 }}
+
+/* Style the button itself — premium pill */
 [data-testid="stSidebarCollapsedControl"] button,
-[data-testid="collapsedControl"] button {{
+[data-testid="collapsedControl"] button,
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stExpandSidebarButton"] button,
+[data-testid="stSidebarCollapsedControl"][role="button"],
+[data-testid="collapsedControl"][role="button"],
+button[aria-label*="sidebar" i],
+button[aria-label*="kenar" i] {{
   background: linear-gradient(180deg,
               {C["bg_elev"]} 0%,
               rgba(15,19,26,0.96) 100%) !important;
   border: 1px solid {C["border_strong"]} !important;
   border-radius: 10px !important;
   color: {C["t1"]} !important;
-  width: 38px !important;
-  height: 38px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
   padding: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  cursor: pointer !important;
   box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset,
               0 6px 18px -6px rgba(0,0,0,0.55) !important;
-  transition: background 160ms var(--ease, ease),
-              border-color 160ms var(--ease, ease),
-              transform 120ms var(--ease, ease) !important;
+  transition: background 160ms ease,
+              border-color 160ms ease,
+              transform 120ms ease !important;
 }}
+
 [data-testid="stSidebarCollapsedControl"] button:hover,
-[data-testid="collapsedControl"] button:hover {{
+[data-testid="collapsedControl"] button:hover,
+[data-testid="stSidebarCollapseButton"] button:hover,
+button[aria-label*="sidebar" i]:hover {{
   background: linear-gradient(180deg,
               {C["surface"]} 0%,
               {C["bg_elev"]} 100%) !important;
@@ -284,8 +307,11 @@ html, body, .stApp {{
   color: {C["accent_hover"]} !important;
   transform: translateY(-1px) !important;
 }}
-[data-testid="stSidebarCollapsedControl"] button svg,
-[data-testid="collapsedControl"] button svg {{
+
+[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="collapsedControl"] svg,
+[data-testid="stSidebarCollapseButton"] svg,
+button[aria-label*="sidebar" i] svg {{
   width: 18px !important;
   height: 18px !important;
   color: inherit !important;
