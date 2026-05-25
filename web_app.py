@@ -1,8 +1,12 @@
 """
-HedgeFund AI — Application shell & router
-=========================================
-Institutional terminal entry point. Owns: page config, global CSS injection,
-auth gate, sidebar navigation, status indicators, and route dispatch.
+Yatırım Danışmanım — Application shell & router
+================================================
+Institutional terminal entry point. Owns: page config, global CSS,
+auth gate, top navigation bar, and route dispatch.
+
+Layout: sticky top navigation (no sidebar). Brand on the left,
+flat module buttons in the centre, market-status pill and user
+popover on the right.
 """
 from __future__ import annotations
 
@@ -19,7 +23,7 @@ st.set_page_config(
     page_title="Yatırım Danışmanım",
     page_icon="◆",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
     menu_items={"About": "Yatırım Danışmanım — Yapay Zeka Destekli Yatırım Asistanı"},
 )
 
@@ -64,195 +68,135 @@ if not st.session_state["authenticated"]:
 
 # ── Navigation config ────────────────────────────────────────────────────────
 NAV = [
-    ("Dashboard",      "Dashboard",      "⬡", "G D"),
-    ("Fırsatlar",      "Fırsatlar",      "◈", "G O"),
-    ("Analiz",         "Analiz",         "◎", "G A"),
-    ("Karar Asistanı", "Karar Asistanı", "⌬", "G K"),
-    ("Portföy",        "Portföy",        "◧", "G P"),
-    ("Projeksiyon",    "Projeksiyon",    "◉", "G R"),
+    ("Dashboard",      "Dashboard",      "⬡"),
+    ("Fırsatlar",      "Fırsatlar",      "◈"),
+    ("Analiz",         "Analiz",         "◎"),
+    ("Karar Asistanı", "Karar",          "⌬"),
+    ("Portföy",        "Portföy",        "◧"),
+    ("Projeksiyon",    "Projeksiyon",    "◉"),
 ]
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SIDEBAR
+# TOP NAVIGATION BAR
 # ══════════════════════════════════════════════════════════════════════════════
-with st.sidebar:
-    # ── Brand header ──────────────────────────────────────────────────────────
-    st.markdown(
-        f"""
-<div style="padding:20px 20px 18px 20px;border-bottom:1px solid {C['border_solid']};">
-  <div style="display:flex;align-items:center;gap:11px;">
-    <div style="width:30px;height:30px;background:{C['accent']};
-                border-radius:7px;display:flex;align-items:center;justify-content:center;
-                box-shadow:
-                  0 1px 0 0 rgba(255,255,255,0.18) inset,
-                  0 -1px 0 0 rgba(0,0,0,0.20) inset,
-                  0 0 0 1px {C['accent_deep']},
-                  0 4px 12px -4px rgba(91,140,255,0.45);">
-      <span style="font-family:Inter Tight,sans-serif;font-size:14px;
-                   color:#ffffff;font-weight:700;line-height:1;">Y</span>
-    </div>
-    <div>
-      <div style="font-family:Inter Tight,sans-serif;font-size:15px;
-                  font-weight:700;color:{C['t1']};letter-spacing:-0.01em;
-                  line-height:1;">Yatırım Danışmanım</div>
-      <div style="font-size:9.5px;font-weight:600;color:{C['t3']};
-                  letter-spacing:0.14em;text-transform:uppercase;
-                  margin-top:4px;line-height:1;">Terminal · v1.0</div>
-    </div>
+def _market_status() -> tuple[str, str, bool]:
+    """Return (label, hex_color, is_any_open)."""
+    now = datetime.now()
+    hm  = now.hour * 60 + now.minute
+    wd  = now.weekday()
+    bist_open = (wd < 5) and (10 * 60 <= hm < 18 * 60)
+    us_open   = (wd < 5) and (16 * 60 + 30 <= hm < 23 * 60)
+    if bist_open and us_open:
+        return "BIST + ABD AÇIK", C["buy"], True
+    if bist_open:
+        return "BIST AÇIK", C["buy"], True
+    if us_open:
+        return "ABD AÇIK", C["buy"], True
+    return "PIYASA KAPALI", C["t3"], False
+
+
+def render_topnav() -> None:
+    user_name  = st.session_state.get("user_name", "")
+    user_email = st.session_state.get("user_email", "")
+    is_admin   = st.session_state.get("user_admin", False)
+    initial    = (user_name or user_email or "U")[0].upper()
+    status_lbl, status_col, status_live = _market_status()
+    now_str = datetime.now().strftime("%H:%M")
+
+    # Open the top-nav wrapper
+    st.markdown('<div class="topnav-wrap"><div class="topnav">', unsafe_allow_html=True)
+
+    # 1 brand | 6 module buttons | 1 status | 1 user popover
+    cols = st.columns([2.6, 0.95, 0.95, 0.95, 1.20, 0.95, 1.10, 1.55, 1.55],
+                      gap="small", vertical_alignment="center")
+
+    # ── Brand ────────────────────────────────────────────────────────────────
+    with cols[0]:
+        st.markdown(
+            f"""
+<div class="topnav-brand">
+  <div class="topnav-logo">Y</div>
+  <div class="topnav-brand-text">
+    <div class="topnav-brand-name">Yatırım Danışmanım</div>
+    <div class="topnav-brand-sub">Terminal · v1.0</div>
   </div>
 </div>""",
-        unsafe_allow_html=True,
-    )
+            unsafe_allow_html=True,
+        )
 
-    # ── Search hint (placeholder for future ⌘K) ──────────────────────────────
-    st.markdown(
-        f"""
-<div style="padding:14px 18px 6px;">
-  <div style="display:flex;align-items:center;gap:8px;
-              padding:7px 10px;border:1px solid {C['border_solid']};
-              border-radius:7px;background:rgba(15,19,26,0.60);
-              cursor:default;opacity:0.78;">
-    <span style="color:{C['t3']};font-size:13px;">⌕</span>
-    <span style="color:{C['t3']};font-size:12px;flex:1;">Hızlı arama…</span>
-    <span style="color:{C['t4']};font-size:9.5px;font-weight:600;
-                 letter-spacing:0.10em;border:1px solid {C['border_solid']};
-                 padding:1px 5px;border-radius:3px;
-                 font-family:JetBrains Mono,monospace;">⌘K</span>
-  </div>
-</div>""",
-        unsafe_allow_html=True,
-    )
-
-    # ── Section label ─────────────────────────────────────────────────────────
-    st.markdown(
-        f"""
-<div style="padding:8px 22px 4px;display:flex;align-items:center;gap:8px;">
-  <div style="height:1px;width:12px;background:{C['accent']};opacity:0.6;"></div>
-  <div style="font-size:10px;font-weight:700;text-transform:uppercase;
-              letter-spacing:0.14em;color:{C['t3']};">MODÜLLER</div>
-</div>""",
-        unsafe_allow_html=True,
-    )
-
-    # ── Nav buttons ───────────────────────────────────────────────────────────
-    for key, label, icon, kbd in NAV:
-        is_active = st.session_state["page"] == key
-        if is_active:
+    # ── Module buttons ───────────────────────────────────────────────────────
+    for i, (key, label, _icon) in enumerate(NAV, start=1):
+        with cols[i]:
+            is_active = st.session_state["page"] == key
             st.markdown(
-                f"""
-<div style="border-left:2px solid {C['accent']};
-            background:linear-gradient(90deg,
-              rgba(91,140,255,0.10) 0%,
-              rgba(91,140,255,0.02) 80%,
-              transparent 100%);
-            margin:2px 8px 2px 0;border-radius:0 6px 6px 0;">""",
+                f'<div class="topnav-item{" topnav-item--active" if is_active else ""}">',
                 unsafe_allow_html=True,
             )
-        if st.button(label, key=f"nav_{key}",
-                     use_container_width=True, type="secondary"):
-            st.session_state["page"] = key
-            st.rerun()
-        if is_active:
-            st.markdown("</div>", unsafe_allow_html=True)
+            if st.button(label, key=f"nav_{key}", use_container_width=True,
+                         type="primary" if is_active else "secondary"):
+                st.session_state["page"] = key
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── User block + logout ───────────────────────────────────────────────────
-    user_name = st.session_state.get("user_name", "")
-    user_email = st.session_state.get("user_email", "")
-    is_admin = st.session_state.get("user_admin", False)
-    admin_tag = (
-        f'<span style="font-size:9.5px;font-weight:700;color:{C["accent_hover"]};'
-        f'background:{C["accent_dim"]};padding:1px 5px;border-radius:3px;'
-        f'text-transform:uppercase;letter-spacing:0.08em;'
-        f'border:1px solid rgba(91,140,255,0.28);margin-left:6px;">Admin</span>'
-        if is_admin else ""
-    )
-    initial = (user_name or user_email or "U")[0].upper()
+    # ── Market status pill ───────────────────────────────────────────────────
+    with cols[7]:
+        dot_cls = "live" if status_live else "idle"
+        st.markdown(
+            f"""
+<div class="topnav-status">
+  <span class="dot {dot_cls}"></span>
+  <span class="topnav-status-time">{now_str}</span>
+  <span class="topnav-status-label" style="color:{status_col};">{status_lbl}</span>
+</div>""",
+            unsafe_allow_html=True,
+        )
 
-    st.markdown(
-        f"""
-<div style="border-top:1px solid {C['border_solid']};padding:14px 20px 10px;
-            margin-top:8px;">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-    <div style="width:30px;height:30px;border-radius:50%;
-                background:{C['accent']};
-                display:flex;align-items:center;justify-content:center;
-                flex-shrink:0;
-                box-shadow:
-                  0 1px 0 0 rgba(255,255,255,0.18) inset,
-                  0 0 0 1px {C['accent_deep']},
-                  0 3px 8px -3px rgba(91,140,255,0.40);">
-      <span style="font-size:13px;font-weight:700;color:#ffffff;
-                   font-family:Inter Tight,sans-serif;">{initial}</span>
+    # ── User popover (dropdown) ──────────────────────────────────────────────
+    with cols[8]:
+        trigger = f"●  {user_name or user_email or 'Kullanıcı'}"
+        with st.popover(trigger, use_container_width=True):
+            admin_tag = (
+                f'<span class="topnav-admin-tag">Admin</span>' if is_admin else ""
+            )
+            st.markdown(
+                f"""
+<div class="topnav-pop-head">
+  <div class="topnav-pop-avatar">{initial}</div>
+  <div class="topnav-pop-id">
+    <div class="topnav-pop-name">
+      {user_name or user_email or "Kullanıcı"}{admin_tag}
     </div>
-    <div style="flex:1;min-width:0;">
-      <div style="font-size:12.5px;font-weight:600;color:{C['t1']};
-                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-                  letter-spacing:-0.005em;">
-        {user_name or user_email or "Kullanıcı"}{admin_tag}</div>
-      <div style="font-size:10.5px;color:{C['t3']};white-space:nowrap;
-                  overflow:hidden;text-overflow:ellipsis;
-                  letter-spacing:0.01em;">{user_email}</div>
-    </div>
+    <div class="topnav-pop-email">{user_email}</div>
+  </div>
+</div>
+<div class="topnav-pop-meta">
+  <div class="topnav-pop-meta-row">
+    <span>Piyasa</span>
+    <span style="color:{status_col};font-weight:600;">{status_lbl}</span>
+  </div>
+  <div class="topnav-pop-meta-row">
+    <span>Saat</span>
+    <span class="mono">{now_str}</span>
+  </div>
+  <div class="topnav-pop-meta-row">
+    <span>Kripto</span>
+    <span style="color:{C['t2']};">7/24 açık</span>
   </div>
 </div>""",
-        unsafe_allow_html=True,
-    )
+                unsafe_allow_html=True,
+            )
+            if st.button("Çıkış Yap", key="logout_btn",
+                         use_container_width=True, type="secondary"):
+                for k in ["authenticated", "user_email",
+                          "user_name", "user_admin"]:
+                    st.session_state[k] = False if k == "authenticated" else None
+                st.rerun()
 
-    if st.button("Çıkış Yap", key="logout_btn",
-                 use_container_width=True, type="secondary"):
-        for k in ["authenticated", "user_email", "user_name", "user_admin"]:
-            st.session_state[k] = False if k == "authenticated" else None
-        st.rerun()
+    # Close the wrapper
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
-    # ── Footer status (dynamic market clock) ──────────────────────────────────
-    _now = datetime.now()
-    _hm = _now.hour * 60 + _now.minute
-    _wd = _now.weekday()  # 0=Mon ... 6=Sun
-    # Borsa İstanbul:  Mon-Fri 10:00-18:00 (TR)
-    _bist_open = (_wd < 5) and (10 * 60 <= _hm < 18 * 60)
-    # US equities (TR time, DST naive): Mon-Fri 16:30-23:00
-    _us_open   = (_wd < 5) and (16 * 60 + 30 <= _hm < 23 * 60)
-    # Crypto: 24/7
 
-    if _bist_open and _us_open:
-        _label, _tone = "BIST + ABD AÇIK", C["buy"]
-    elif _bist_open:
-        _label, _tone = "BIST AÇIK", C["buy"]
-    elif _us_open:
-        _label, _tone = "ABD AÇIK", C["buy"]
-    else:
-        _label, _tone = "PIYASA KAPALI", C["t3"]
-
-    now_str = _now.strftime("%H:%M")
-    st.markdown(
-        f"""
-<div class="sb-footer" style="position:fixed;bottom:0;left:0;width:240px;
-            max-width:100%;
-            background:{C['sidebar']};
-            border-top:1px solid {C['border_solid']};
-            padding:12px 20px 14px;">
-  <div style="font-size:10px;font-weight:700;text-transform:uppercase;
-              letter-spacing:0.14em;color:{C['t3']};margin-bottom:8px;
-              display:flex;align-items:center;gap:8px;">
-    <div style="height:1px;width:12px;background:{C['accent']};opacity:0.6;"></div>
-    PIYASA DURUMU
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span class="dot {'live' if _bist_open or _us_open else 'idle'}"></span>
-    <span style="font-size:13px;color:{C['t1']};font-weight:600;
-                 font-variant-numeric:tabular-nums;letter-spacing:-0.01em;
-                 font-family:JetBrains Mono,monospace;">{now_str}</span>
-    <span style="font-size:10px;color:{_tone};font-weight:700;
-                 letter-spacing:0.10em;margin-left:auto;
-                 text-transform:uppercase;">{_label}</span>
-  </div>
-  <div style="margin-top:6px;font-size:9.5px;color:{C['t4']};
-              letter-spacing:0.04em;line-height:1.4;">
-    Kripto · 7/24 açık
-  </div>
-</div>""",
-        unsafe_allow_html=True,
-    )
+render_topnav()
 
 # ══════════════════════════════════════════════════════════════════════════════
 # ROUTER

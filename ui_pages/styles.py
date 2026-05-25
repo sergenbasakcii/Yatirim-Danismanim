@@ -245,13 +245,250 @@ html, body, .stApp {{
 [data-testid="stHeader"] > * {{ pointer-events: auto; }}
 
 /* ════════════════════════════════════════════════════════════════════════
-   COLLAPSIBLE SIDEBAR — Enterprise SaaS pattern
-   Desktop: 240px expanded ↔ collapsed (modules hidden), smooth transform.
-   Tablet:  same behavior, slightly narrower.
-   Mobile:  off-canvas drawer with Streamlit's native overlay.
-   Both collapse (inside sidebar) and expand (floating chevron) controls
-   are styled premium so the toggle is always discoverable.
+   HIDE SIDEBAR ENTIRELY — App uses a sticky top-nav instead.
    ──────────────────────────────────────────────────────────────────────── */
+[data-testid="stSidebar"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarUserContent"],
+[data-testid="stSidebarContent"],
+section[data-testid="stSidebar"] {{
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  pointer-events: none !important;
+}}
+
+/* ════════════════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR — sticky, premium SaaS pattern (Linear/Vercel-like)
+   Brand · flat module buttons · market status · user popover.
+   ──────────────────────────────────────────────────────────────────────── */
+.topnav-wrap {{
+  position: sticky;
+  top: 0;
+  z-index: 990;
+  margin: -24px -32px 18px -32px;
+  padding: 10px 24px 10px 24px;
+  background: rgba(10, 13, 18, 0.78);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid {C['border_solid']};
+  box-shadow: 0 4px 16px -8px rgba(0,0,0,0.45);
+}}
+.topnav {{
+  max-width: 1620px;
+  margin: 0 auto;
+}}
+/* Smooth row alignment — kill Streamlit's default vertical padding inside cols */
+.topnav-wrap [data-testid="stHorizontalBlock"] {{
+  align-items: center !important;
+  gap: 6px !important;
+}}
+.topnav-wrap [data-testid="column"] > div {{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}}
+
+/* ── Brand block ───────────────────────────────────────────────────────── */
+.topnav-brand {{
+  display: flex; align-items: center; gap: 11px;
+  padding: 4px 8px 4px 4px;
+}}
+.topnav-logo {{
+  width: 32px; height: 32px;
+  background: {C['accent']};
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 700; font-size: 15px; color: #fff;
+  line-height: 1;
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,0.18) inset,
+    0 -1px 0 0 rgba(0,0,0,0.20) inset,
+    0 0 0 1px {C['accent_deep']},
+    0 4px 12px -4px rgba(91,140,255,0.45);
+}}
+.topnav-brand-text {{ display: flex; flex-direction: column; gap: 3px; }}
+.topnav-brand-name {{
+  font-family: "Inter Tight", sans-serif;
+  font-size: 14.5px; font-weight: 700; color: {C['t1']};
+  letter-spacing: -0.01em; line-height: 1;
+}}
+.topnav-brand-sub {{
+  font-size: 9.5px; font-weight: 600; color: {C['t3']};
+  letter-spacing: 0.14em; text-transform: uppercase; line-height: 1;
+}}
+
+/* ── Module buttons (rewrite the .stButton style for the top-nav scope) ── */
+.topnav-wrap .stButton > button {{
+  background: transparent !important;
+  color: {C['t2']} !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--r-md) !important;
+  padding: 7px 12px !important;
+  min-height: 34px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.005em !important;
+  font-family: "Inter Tight", sans-serif !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+  position: relative;
+  transition:
+    background var(--d-default) var(--ease),
+    color var(--d-default) var(--ease),
+    border-color var(--d-default) var(--ease) !important;
+}}
+.topnav-wrap .stButton > button:hover {{
+  background: rgba(148,163,184,0.06) !important;
+  color: {C['t1']} !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}}
+.topnav-wrap .stButton > button:focus-visible {{
+  outline: none !important;
+  box-shadow: 0 0 0 2px {C['accent']} !important;
+}}
+/* Active module: filled accent button via type="primary" */
+.topnav-wrap .stButton > button[kind="primary"] {{
+  background: {C['accent_dim']} !important;
+  color: {C['accent_hover']} !important;
+  border: 1px solid rgba(91,140,255,0.32) !important;
+  font-weight: 600 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,0.05) inset,
+    0 0 0 0 transparent !important;
+}}
+.topnav-wrap .stButton > button[kind="primary"]:hover {{
+  background: rgba(91,140,255,0.16) !important;
+  border-color: rgba(91,140,255,0.45) !important;
+  color: {C['accent_hover']} !important;
+}}
+
+/* ── Market status pill ────────────────────────────────────────────────── */
+.topnav-status {{
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  background: rgba(15,19,26,0.70);
+  border: 1px solid {C['border_solid']};
+  border-radius: var(--r-md);
+  height: 34px;
+  white-space: nowrap;
+}}
+.topnav-status-time {{
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px; font-weight: 600; color: {C['t1']};
+  font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+}}
+.topnav-status-label {{
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.10em; text-transform: uppercase;
+}}
+
+/* ── User popover trigger button (Streamlit popover) ───────────────────── */
+.topnav-wrap [data-testid="stPopover"] > div > button,
+.topnav-wrap div[data-testid="stPopoverButton"] button {{
+  background: rgba(15,19,26,0.70) !important;
+  color: {C['t1']} !important;
+  border: 1px solid {C['border_solid']} !important;
+  border-radius: var(--r-md) !important;
+  padding: 6px 12px !important;
+  min-height: 34px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  font-family: "Inter Tight", sans-serif !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+  transition: background var(--d-default) var(--ease),
+              border-color var(--d-default) var(--ease) !important;
+}}
+.topnav-wrap [data-testid="stPopover"] > div > button:hover,
+.topnav-wrap div[data-testid="stPopoverButton"] button:hover {{
+  background: rgba(28,35,46,0.90) !important;
+  border-color: {C['border_strong']} !important;
+  color: {C['t1']} !important;
+}}
+
+/* ── User popover panel content ────────────────────────────────────────── */
+.topnav-pop-head {{
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid {C['divider']};
+  margin-bottom: 10px;
+}}
+.topnav-pop-avatar {{
+  width: 34px; height: 34px; border-radius: 50%;
+  background: {C['accent']};
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 14px;
+  font-family: "Inter Tight", sans-serif;
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,0.18) inset,
+    0 0 0 1px {C['accent_deep']};
+  flex-shrink: 0;
+}}
+.topnav-pop-id {{ min-width: 0; flex: 1; }}
+.topnav-pop-name {{
+  font-size: 13px; font-weight: 600; color: {C['t1']};
+  letter-spacing: -0.005em;
+  display: flex; align-items: center; gap: 6px;
+}}
+.topnav-pop-email {{
+  font-size: 11.5px; color: {C['t3']};
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 2px;
+}}
+.topnav-admin-tag {{
+  font-size: 9.5px; font-weight: 700; color: {C['accent_hover']};
+  background: {C['accent_dim']};
+  padding: 1px 6px; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border: 1px solid rgba(91,140,255,0.28);
+}}
+.topnav-pop-meta {{
+  display: flex; flex-direction: column; gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid {C['divider']};
+  margin-bottom: 10px;
+}}
+.topnav-pop-meta-row {{
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11.5px; color: {C['t3']};
+}}
+.topnav-pop-meta-row span:first-child {{
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.10em; text-transform: uppercase;
+}}
+
+/* ── Responsive: mobile collapses top-nav into vertical stack ──────────── */
+@media (max-width: 1024px) {{
+  .topnav-wrap {{ margin: -16px -16px 14px -16px; padding: 8px 12px; }}
+  .topnav-brand-sub {{ display: none; }}
+  .topnav-status {{ padding: 6px 8px; }}
+  .topnav-status-label {{ display: none; }}
+}}
+@media (max-width: 640px) {{
+  .topnav-wrap {{ margin: -12px -10px 12px -10px; padding: 8px 10px; }}
+  .topnav-wrap [data-testid="stHorizontalBlock"] {{
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }}
+  .topnav-wrap [data-testid="column"] {{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }}
+  .topnav-brand-text {{ display: none; }}
+  .topnav-wrap .stButton > button {{
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+  }}
+  .topnav-status {{ display: none; }}
+}}
+
+/* Legacy block kept below for back-compat (sidebar selectors are now no-ops) */
 
 /* Smooth, GPU-friendly transition on the sidebar shell */
 [data-testid="stSidebar"] {{
