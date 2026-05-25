@@ -245,51 +245,140 @@ html, body, .stApp {{
 [data-testid="stHeader"] > * {{ pointer-events: auto; }}
 
 /* ════════════════════════════════════════════════════════════════════════
-   SIDEBAR LOCKED OPEN — Modüller her zaman görünür
-   Desktop'ta sidebar asla kapanmaz: tüm collapse butonları gizli,
-   sidebar görünürlüğü zorlanır. Mobile'da (≤640px) drawer davranışı
-   responsive bölümünde ayrıca yönetilir.
+   COLLAPSIBLE SIDEBAR — Enterprise SaaS pattern
+   Desktop: 240px expanded ↔ collapsed (modules hidden), smooth transform.
+   Tablet:  same behavior, slightly narrower.
+   Mobile:  off-canvas drawer with Streamlit's native overlay.
+   Both collapse (inside sidebar) and expand (floating chevron) controls
+   are styled premium so the toggle is always discoverable.
    ──────────────────────────────────────────────────────────────────────── */
 
-/* 1) Hide ALL sidebar collapse / expand buttons */
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"],
-[data-testid="stSidebarCollapseButton"],
-[data-testid="stExpandSidebarButton"],
-[data-testid="stSidebar"] button[aria-label*="collapse" i],
-[data-testid="stSidebar"] button[aria-label*="close" i],
-[data-testid="stSidebar"] button[aria-label*="kapat" i],
-[data-testid="stSidebar"] button[kind="header"],
-[data-testid="stSidebar"] [data-testid="stSidebarHeader"] button {{
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  width: 0 !important;
-  height: 0 !important;
+/* Smooth, GPU-friendly transition on the sidebar shell */
+[data-testid="stSidebar"] {{
+  transition:
+    transform var(--d-modal) var(--ease),
+    width var(--d-modal) var(--ease),
+    min-width var(--d-modal) var(--ease),
+    margin-left var(--d-modal) var(--ease) !important;
+  will-change: transform, width;
 }}
 
-/* 2) Force sidebar to be ALWAYS visible (even if state says collapsed) */
-[data-testid="stSidebar"],
-[data-testid="stSidebar"][aria-expanded="false"],
-[data-testid="stSidebar"][aria-expanded="true"] {{
+/* ── EXPAND control (floating chevron, shown when sidebar is collapsed) ── */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {{
+  position: fixed !important;
+  top: 14px !important;
+  left: 14px !important;
+  z-index: 1000 !important;
   display: flex !important;
   visibility: visible !important;
-  transform: none !important;
-  margin-left: 0 !important;
-  width: 240px !important;
-  min-width: 240px !important;
-  max-width: 240px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button {{
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  background: {C["bg_elev"]} !important;
+  border: 1px solid {C["border_solid"]} !important;
+  border-radius: var(--r-md) !important;
+  color: {C["t1"]} !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,0.04) inset,
+    0 4px 12px -4px rgba(0,0,0,0.50) !important;
+  cursor: pointer !important;
+  transition:
+    background var(--d-default) var(--ease),
+    border-color var(--d-default) var(--ease),
+    box-shadow var(--d-default) var(--ease),
+    transform var(--d-micro) var(--ease) !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button:hover,
+[data-testid="collapsedControl"] button:hover {{
+  background: rgba(28,35,46,0.95) !important;
+  border-color: {C["accent"]} !important;
+  color: {C["accent_hover"]} !important;
+  box-shadow:
+    0 0 0 3px {C["accent_glow"]},
+    0 6px 16px -4px rgba(0,0,0,0.55) !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button:active,
+[data-testid="collapsedControl"] button:active {{
+  transform: scale(0.96) !important;
+}}
+[data-testid="stSidebarCollapsedControl"] button svg,
+[data-testid="collapsedControl"] button svg {{
+  width: 16px !important;
+  height: 16px !important;
+  color: inherit !important;
+  fill: currentColor !important;
+}}
+
+/* ── COLLAPSE control (chevron inside sidebar header, shown when expanded) ─ */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] button {{
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 0.65 !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--r-sm) !important;
+  color: {C["t2"]} !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition:
+    background var(--d-default) var(--ease),
+    border-color var(--d-default) var(--ease),
+    color var(--d-default) var(--ease),
+    opacity var(--d-default) var(--ease) !important;
+}}
+[data-testid="stSidebarCollapseButton"]:hover,
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] button:hover {{
+  background: rgba(148,163,184,0.08) !important;
+  border-color: {C["border_strong"]} !important;
+  color: {C["t1"]} !important;
+  opacity: 1 !important;
+}}
+[data-testid="stSidebarCollapseButton"]:focus-visible,
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] button:focus-visible {{
+  outline: none !important;
+  box-shadow: 0 0 0 2px {C["accent"]} !important;
   opacity: 1 !important;
 }}
 
-/* 3) Make sure sidebar content is visible (some Streamlit versions
-      hide the inner div when collapsed) */
-[data-testid="stSidebarContent"],
-[data-testid="stSidebarUserContent"] {{
-  display: block !important;
-  visibility: visible !important;
+/* Sidebar header bar (where the collapse button lives) — tight, anchored top */
+[data-testid="stSidebar"] [data-testid="stSidebarHeader"] {{
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding: 10px 10px 0 10px !important;
+  background: transparent !important;
+  border: none !important;
+  min-height: 0 !important;
+}}
+
+/* Collapsed state: hide the fixed-position market-status footer
+   (it uses position:fixed so it escapes the sidebar transform). */
+[data-testid="stSidebar"][aria-expanded="false"] .sb-footer,
+[data-testid="stSidebar"][aria-expanded="false"] div[style*="position:fixed"] {{
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity var(--d-default) var(--ease),
+              visibility 0s linear var(--d-default) !important;
+}}
+[data-testid="stSidebar"][aria-expanded="true"] .sb-footer,
+[data-testid="stSidebar"][aria-expanded="true"] div[style*="position:fixed"] {{
   opacity: 1 !important;
+  visibility: visible !important;
+  transition: opacity var(--d-default) var(--ease) !important;
 }}
 
 /* ── Content area ────────────────────────────────────────────────────────── */
@@ -327,23 +416,25 @@ html, body, .stApp {{
   .main .block-container {{
     padding: 12px 10px 32px 10px !important;
   }}
-  /* Sidebar collapse control float higher / more reachable */
-  [data-testid="stSidebarCollapsedControl"] {{
-    top: 8px !important;
-    left: 8px !important;
+  /* Mobile: floating expand control sits higher for thumb reach */
+  [data-testid="stSidebarCollapsedControl"],
+  [data-testid="collapsedControl"] {{
+    top: 10px !important;
+    left: 10px !important;
   }}
-  /* Mobile: sidebar narrower so it doesn't eat the screen, but still visible */
-  [data-testid="stSidebar"],
-  [data-testid="stSidebar"][aria-expanded="false"],
-  [data-testid="stSidebar"][aria-expanded="true"] {{
-    min-width: 200px !important;
-    width: 200px !important;
-    max-width: 200px !important;
+  /* Mobile: sidebar acts as off-canvas drawer (Streamlit native overlay).
+     When open, slightly narrower than desktop so content peeks. */
+  [data-testid="stSidebar"] {{
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 84vw !important;
+    box-shadow: 0 24px 56px -12px rgba(0,0,0,0.70) !important;
   }}
-  /* Sidebar fixed footer: match drawer width, don't lock to 240px */
+  /* Sidebar fixed footer follows drawer width */
   [data-testid="stSidebar"] > div:last-child > div[style*="position:fixed"],
   [data-testid="stSidebarContent"] div[style*="position:fixed"] {{
-    width: 200px !important;
+    width: 260px !important;
+    max-width: 84vw !important;
   }}
   /* KPI tiles: full-width single column */
   [data-testid="stHorizontalBlock"] > div {{
@@ -370,8 +461,13 @@ html, body, .stApp {{
 [data-testid="stSidebar"] {{
   background: {C["sidebar"]} !important;
   border-right: 1px solid {C["border_solid"]} !important;
+}}
+/* Expanded state: pin to 240px (do NOT use !important on width so the
+   collapse animation can run; only constrain the expanded target). */
+[data-testid="stSidebar"][aria-expanded="true"] {{
   min-width: 240px !important;
   max-width: 240px !important;
+  width: 240px !important;
 }}
 [data-testid="stSidebar"] > div:first-child {{ padding-top: 0 !important; }}
 [data-testid="stSidebar"] * {{ color: {C["t1"]}; }}
