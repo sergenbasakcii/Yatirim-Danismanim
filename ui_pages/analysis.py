@@ -63,6 +63,59 @@ def _indicator_row(label, value, status, note=""):
 </div>"""
 
 
+def _render_ai_analysis(res, sym, decision, confidence, conviction,
+                        timing, price, currency):
+    """AI-generated analysis paragraph. Silently skipped if no key configured."""
+    try:
+        from src.ai_commentary import ai_generate, ai_enabled, SYSTEM_ANALYST
+    except Exception:
+        return
+    if not ai_enabled():
+        return
+
+    # Compact, factual context for the model (no hallucinated numbers)
+    rsi   = getattr(res, "rsi", None)
+    trend = getattr(res, "trend", "") or ""
+    ret1m = getattr(res, "return_1m", None)
+    ret3m = getattr(res, "return_3m", None)
+    why   = getattr(res, "why_enter", "") or getattr(res, "opportunity_label", "") or ""
+
+    prompt = (
+        f"Varlık: {res.name or sym} ({sym}), tür: {res.asset_type}\n"
+        f"Karar: {decision} | Güven: {confidence:.0f}% | "
+        f"Konviksiyon: {conviction:.0f} | Timing: {timing:.0f}\n"
+        f"Fiyat: {fmt_price(price, currency)}\n"
+        f"RSI: {rsi if rsi is not None else 'yok'} | Trend: {trend}\n"
+        f"1A getiri: {ret1m if ret1m is not None else 'yok'} | "
+        f"3A getiri: {ret3m if ret3m is not None else 'yok'}\n"
+        f"Motor notu: {why[:300]}\n\n"
+        f"Bu analizi yatırımcı için 3-4 cümlede yorumla: kararın arkasındaki "
+        f"mantık, en önemli risk, ve zamanlama açısından dikkat edilmesi gereken "
+        f"nokta. Sade Türkçe, tek paragraf, abartısız."
+    )
+    ck = f"an:{sym}:{decision}:{confidence:.0f}:{conviction:.0f}"
+    with st.spinner("AI yorumu hazırlanıyor…"):
+        ai = ai_generate(prompt, system=SYSTEM_ANALYST, cache_key=ck,
+                         max_tokens=360, temperature=0.45)
+    if not (ai.get("ok") and ai.get("text")):
+        return
+
+    from html import escape
+    txt = escape(ai["text"]).replace("\n\n", "<br><br>").replace("\n", " ")
+    section_header("AI Yorum", kicker="YAPAY ZEKÂ")
+    st.markdown(
+        f'<div class="ai-card fade-up">'
+        f'  <span class="ai-tag">◆ AI ANALİZ · GEMINI</span>'
+        f'  <div class="ai-body" style="font-size:13px;line-height:1.6;">{txt}</div>'
+        f'  <div style="font-size:10.5px;color:{C["t4"]};margin-top:10px;'
+        f'              line-height:1.4;">Yapay zekâ üretimi yorumdur; '
+        f'yatırım tavsiyesi değildir. Kararı kendi araştırmanızla doğrulayın.</div>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
+    vspace(18)
+
+
 def render():
     render_ticker()
     page_header("Analiz",
@@ -199,6 +252,9 @@ def render():
     st.markdown(trade_plan_html(res, currency), unsafe_allow_html=True)
 
     vspace(18)
+
+    # ── AI Yorum (ücretsiz Gemini; key yoksa bu bölüm gizlenir) ───────────────
+    _render_ai_analysis(res, sym, decision, confidence, conviction, timing, price, currency)
 
     # ── Ana bölüm: Grafik + Sağ Panel ────────────────────────────────────────
     chart_col, right_col = st.columns([3, 1])

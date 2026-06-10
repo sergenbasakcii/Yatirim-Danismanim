@@ -141,7 +141,55 @@ def _ai_commentary(fg_val: int, signals: list) -> tuple[str, str, float]:
                     f"<b>{avg:.0f}</b>; en yüksek skorlu varlıklara odaklanılması "
                     f"öneriliyor.")
 
-    return title, body, confidence
+    # ── AI overlay (ücretsiz Gemini Flash; key yoksa statik metne düşer) ──────
+    ai_body, ai_tag = _maybe_ai_market_body(fg_val, signals, title, confidence)
+    if ai_body:
+        body = ai_body
+
+    return title, body, confidence, ai_tag
+
+
+def _maybe_ai_market_body(fg_val: int, signals: list,
+                          static_title: str, conf: float) -> tuple[str, bool]:
+    """Try to produce an AI market paragraph. Returns (html_body, is_ai)."""
+    try:
+        from src.ai_commentary import ai_generate, ai_enabled, SYSTEM_ANALYST
+    except Exception:
+        return "", False
+    if not ai_enabled():
+        return "", False
+
+    buys = sum(1 for r in signals if "AL" in (r.decision or "")) if signals else 0
+    sells = sum(1 for r in signals if "SAT" in (r.decision or "")) if signals else 0
+    avg = (sum(getattr(r, "composite_score", 50) or 50 for r in signals) / len(signals)
+           if signals else 50)
+    top = ""
+    if signals:
+        ranked = sorted(signals,
+                        key=lambda r: getattr(r, "composite_score", 0) or 0,
+                        reverse=True)[:3]
+        top = ", ".join(f"{getattr(r,'symbol','?')} ({getattr(r,'decision','?')}, "
+                        f"{getattr(r,'composite_score',0) or 0:.0f})" for r in ranked)
+
+    prompt = (
+        f"Piyasa verisi:\n"
+        f"- Kripto Korku & Açgözlülük Endeksi: {fg_val}/100\n"
+        f"- Pozitif sinyal sayısı: {buys}, negatif: {sells}\n"
+        f"- Ortalama kompozit skor: {avg:.0f}/100\n"
+        f"- En yüksek skorlu varlıklar: {top or 'veri yok'}\n\n"
+        f"Bu tabloyu 2-3 cümlede yorumla. Genel piyasa duygusunu, "
+        f"dikkat edilmesi gereken riski ve kademeli pozisyonlanma açısından "
+        f"ne anlama geldiğini söyle. Tek paragraf, sade Türkçe."
+    )
+    ck = f"dash:{fg_val}:{buys}:{sells}:{avg:.0f}"
+    res = ai_generate(prompt, system=SYSTEM_ANALYST, cache_key=ck,
+                      max_tokens=260, temperature=0.45)
+    if res.get("ok") and res.get("text"):
+        # Plain text → light HTML (escape, keep line breaks subtle)
+        from html import escape
+        txt = escape(res["text"]).replace("\n\n", "<br><br>").replace("\n", " ")
+        return txt, True
+    return "", False
 
 
 # Kart-icin fiyat formatci (BTC vs BIST vb.)
@@ -339,9 +387,9 @@ def render():
 
         vspace(14)
         market_signals = fetch_market_signals()
-        title, body, conf = _ai_commentary(fg_val, market_signals)
+        title, body, conf, is_ai = _ai_commentary(fg_val, market_signals)
         ai_insight_card(title=title, body=body,
-                        tag="AI MARKET COMMENTARY",
+                        tag="AI YORUM · GEMINI" if is_ai else "PIYASA YORUMU",
                         confidence=conf)
 
     vspace(20)
